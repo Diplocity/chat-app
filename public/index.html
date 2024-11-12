@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to the Chat App</title>
+  <style>
+    /* Simple body styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f0f0f0;  /* Light gray background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;  /* Full height of the screen */
+      margin: 0;
+    }
+
+    /* Container for the welcome message */
+    .welcome-container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 300px;
+    }
+
+    h1 {
+      color: #4CAF50;  /* Green color */
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    #username {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 1.1em;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .info-text {
+      margin-top: 15px;
+      font-size: 0.9em;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="welcome-container">
+    <h1>Welcome to the Chat App!</h1>
+    <p class="info-text">Enter a username to start chatting</p>
+    <input type="text" id="username" placeholder="Enter your username..." />
+    <button onclick="enterChat()">Enter Chat</button>
+  </div>
+
+  <script>
+    // Function to handle username input and redirect
+    function enterChat() {
+      const username = document.getElementById('username').value;
+      if (username) {
+        localStorage.setItem('username', username);  // Save username
+        window.location.href = '/chat';  // Redirect to chat room (ensure your route exists)
+      } else {
+        alert('Please enter a username!');
+      }
+    }
+  </script>
+
+</body>
+</html>

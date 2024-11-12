@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Room</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    /* Chat room specific styles */
+    .message {
+      padding: 10px;
+      border-radius: 10px;
+      margin: 5px 0;
+      background: #e2e2e2;
+    }
+
+    .message span.username {
+      font-weight: bold;
+      color: #007BFF;
+    }
+
+    .message span.timestamp {
+      font-size: 0.8em;
+      color: #888;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-container">
+    <div id="messages"></div>
+
+    <!-- Typing Indicator -->
+    <div id="typing-indicator" style="display: none;">Someone is typing...</div>
+
+    <input id="message" type="text" placeholder="Type your message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const username = localStorage.getItem('username');  // Retrieve the username
+
+    // Display message with username and timestamp
+    function displayMessage(message) {
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message');
+
+      // Create the content with username, message, and timestamp
+      const timestamp = new Date().toLocaleTimeString();  // Get current time
+      messageElement.innerHTML = `
+        <span class="username">${message.username}</span>: ${message.text}
+        <span class="timestamp">${timestamp}</span>
+      `;
+
+      document.getElementById('messages').appendChild(messageElement);
+    }
+
+    // Send message
+    function sendMessage() {
+      const messageText = document.getElementById('message').value;
+      if (messageText) {
+        const message = { text: messageText, username: username };
+        socket.emit('chat message', message);  // Emit the message to the server
+        document.getElementById('message').value = '';  // Clear the input field
+      }
+    }
+
+    // Listen for new messages from other users
+    socket.on('chat message', (message) => {
+      displayMessage(message);
+    });
+
+    // Show typing indicator
+    document.getElementById('message').addEventListener('input', () => {
+      socket.emit('typing', username);
+    });
+
+    // Handle typing indicator display
+    socket.on('typing', (username) => {
+      document.getElementById('typing-indicator').style.display = username ? 'block' : 'none';
+    });
+  </script>
+
+</body>
+</html>
